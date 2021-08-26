@@ -4,10 +4,10 @@ from time import sleep
 from constantes import *
 
 
-def pega_centro(x, y, largura, altura):
+def pega_centro(x, y, width, height):
     
-    x1 = largura // 2
-    y1 = altura // 2
+    x1 = width // 2
+    y1 = height // 2
     cx = x + x1
     cy = y + y1
     return cx, cy
@@ -16,9 +16,9 @@ def pega_centro(x, y, largura, altura):
 def set_info(detec):
     global counter
     for (x, y) in detec:
-        if (pos_linha + offset) > y > (pos_linha - offset):
+        if (point1 + offset) > y > (point1 - offset):
             counter += 1
-            cv2.line(frame1, (25, pos_linha), (1200, pos_linha), (0, 127, 255), 3)
+            cv2.line(frame1, (25, point1), (1200, point1), (0, 127, 255), 3)
             detec.remove((x, y))
             print("counting the number of car: " + str(counter))
 
@@ -31,10 +31,10 @@ def show_info(frame1, dilatada):
 
 
 counter = caminhoes = 0
-cap = cv2.VideoCapture('highway.mp4')
+cap = cv2.VideoCapture('video.mp4')
 subtracao =  cv2.createBackgroundSubtractorKNN()  
 while True:
-    ret, frame1 = cap.read()  
+    ret,frame1 = cap.read()  
     tempo = float(1 / delay)
     sleep(tempo) 
     grey = cv2.cvtColor(frame1, cv2.COLOR_BGR2GRAY)  
@@ -47,10 +47,10 @@ while True:
     dilatada = cv2.morphologyEx(dilatada, cv2.MORPH_CLOSE, kernel)
 
     contorno, img = cv2.findContours(dilatada, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    cv2.line(frame1, (25, pos_linha), (1200, pos_linha), (255, 127, 0), 3)
+    cv2.line(frame1, (25, point1), (1200, point1), (255, 127, 0), 3)
     for (i, c) in enumerate(contorno):
         (x, y, w, h) = cv2.boundingRect(c)
-        validar_contorno = (w >= largura_min) and (h >= altura_min)
+        validar_contorno = (w >= width_min) and (h >= height_min)
         if not validar_contorno:
             continue
 
